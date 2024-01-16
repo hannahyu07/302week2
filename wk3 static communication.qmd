@@ -1,0 +1,87 @@
+---
+title: "wk3 statistic communication"
+author: "Hannah Yu"
+format: html
+---
+
+```{r}
+install.packages("carData")
+install.packages("datasauRus")
+install.packages("ggmap")
+install.packages("janitor")
+install.packages("knitr")
+install.packages("maps")
+install.packages("mapproj")
+install.packages("modelsummary")
+install.packages("opendatatoronto")
+install.packages("patchwork")
+install.packages("tidygeocoder")
+install.packages("tidyverse")
+install.packages("troopdata")
+install.packages("WDI")
+```
+
+```{r}
+library(carData)
+library(datasauRus)
+library(ggmap)
+library(janitor)
+library(knitr)
+library(maps)
+library(mapproj)
+library(modelsummary)
+library(opendatatoronto)
+library(patchwork)
+library(tidygeocoder)
+library(tidyverse)
+library(troopdata)
+library(WDI)
+```
+
+
+```{r}
+datasaurus_dozen
+```
+```{r}
+use_git_config(
+  user.name = "Hannah Yu",
+  user.email = "realhannah.yu@mail.utoronto.ca"
+)
+```
+
+```{r}
+# Based on: https://juliasilge.com/blog/datasaurus-multiclass/
+datasaurus_dozen |>
+  filter(dataset %in% c("dino", "star", "away", "bullseye")) |>
+  summarise(across(c(x, y), list(mean = mean, sd = sd)),
+            .by = dataset) |>
+  kable(col.names = c("Dataset", "x mean", "x sd", "y mean", "y sd"),
+        booktabs = TRUE, digits = 1)
+```
+
+```{r}
+datasaurus_dozen |>
+  filter(dataset %in% c("dino", "star", "away", "bullseye")) |>
+  ggplot(aes(x = x, y = y, colour = dataset)) +
+  geom_point() +
+  theme_minimal() +
+  facet_wrap(vars(dataset), nrow = 2, ncol = 2) +
+  labs(color = "Dataset")
+```
+
+```{r}
+head(anscombe)
+```
+```{r}
+# From: https://www.njtierney.com/post/2020/06/01/tidy-anscombe/
+# And the pivot_longer() vignette.
+
+tidy_anscombe <-
+  anscombe |>
+  pivot_longer(
+    everything(),
+    names_to = c(".value", "set"),
+    names_pattern = "(.)(.)"
+  )
+```
+
